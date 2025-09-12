@@ -1,0 +1,30 @@
+@using System.Collections.Generic
+@using Soenneker.Extensions.String
+
+@inherits Soenneker.Quark.Components.Element
+
+<div @attributes="BuildAttributes()">
+	@ChildContent
+</div>
+
+@code {
+    protected override Dictionary<string, object> BuildAttributes()
+    {
+        Dictionary<string, object> attributes = base.BuildAttributes();
+        
+        // Ensure the col class is always included
+        var existingClass = attributes.GetValueOrDefault("class")?.ToString();
+        const string colClass = "col";
+        
+        if (existingClass.IsNullOrEmpty())
+        {
+            attributes["class"] = colClass;
+        }
+        else
+        {
+            attributes["class"] = $"{colClass} {existingClass}";
+        }
+        
+        return attributes;
+    }
+}
