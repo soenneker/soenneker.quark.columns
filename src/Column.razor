@@ -6,6 +6,15 @@
 
 @code {
 	public override string? Name { get; set; } = "Column";
+
+    [Parameter]
+    public CssValue<ColumnSizeBuilder>? ColumnSize { get; set; }
+
+    [Parameter]
+    public CssValue<ColumnOffsetBuilder>? ColumnOffset { get; set; }
+
+    [Parameter]
+    public CssValue<ColumnOrderBuilder>? ColumnOrder { get; set; }
     
     protected override Dictionary<string, object> BuildAttributes()
     {
@@ -13,6 +22,30 @@
         
         AppendToClassAttr(Attributes, "col");
 
+        // Add column-specific CSS values
+        AddColumnCss(ColumnSize);
+        AddColumnCss(ColumnOffset);
+        AddColumnCss(ColumnOrder);
+
         return Attributes;
+    }
+
+    private void AddColumnCss<T>(CssValue<T>? cssValue) where T : class, ICssBuilder
+    {
+        if (cssValue is { IsEmpty: false })
+        {
+            var css = cssValue.Value.ToString();
+            if (!string.IsNullOrEmpty(css))
+            {
+                if (cssValue.Value.IsCssStyle)
+                {
+                    AppendStyleDeclAttr(Attributes, css);
+                }
+                else
+                {
+                    AppendToClassAttr(Attributes, css);
+                }
+            }
+        }
     }
 }
