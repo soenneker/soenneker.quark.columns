@@ -5,10 +5,11 @@
 </div>
 
 @code {
+	public override string? Name { get; set; } = "Column";
     
     protected override Dictionary<string, object> BuildAttributes()
     {
-        base.BuildAttributes();
+        Attributes = base.BuildAttributes();
         
         AppendToClassAttr(Attributes, "col");
 
